@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Nama Orang</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .fix { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>List Nama Orang</h1>
+    <form method="POST" action="/add">
+        <label for="name">Nama:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="reason">Alasan:</label>
+        <input type="text" id="reason" name="reason" required>
+        <label for="nominal">Nominal:</label>
+        <input type="number" id="nominal" name="nominal" step="0.01" required>
+        <button type="submit">Tambah</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Alasan</th>
+                <th>Nominal</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in people_list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ person.name }}</td>
+                <td>{{ person.reason }}</td>
+                <td>Rp {{ "{:,.2f}".format(person.nominal) }}</td>
+                <td class="{{ 'fix' if person.fix else '' }}">
+                    {{ 'Fix' if person.fix else 'Belum Fix' }}
+                </td>
+                <td>
+                    {% if not person.fix %}
+                    <a href="/fix/{{ loop.index0 }}">Tandai Fix</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/download">Download Daftar sebagai Word</a>
+</body>
+</html>
